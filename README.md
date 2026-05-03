@@ -50,11 +50,57 @@ Flash. Change radio address as necessary.
 ```
 cfloader flash build/cf2.bin stm32-fw -w radio://0/80/2M/E7E7E7E702
 ```
+# Change Streamer Script opencv-viewer.py
 
+Disabling color feed as shown can improve stability of feed.
 
-# Flashing GAP8
+```
+if format == 0:
+          bayer_img = np.frombuffer(imgStream, dtype=np.uint8)   
+          bayer_img.shape = (244, 324)
+          #color_img = cv2.cvtColor(bayer_img, cv2.COLOR_BayerBG2BGRA)
+          cv2.imshow('Raw', bayer_img)
+          #cv2.imshow('Color', color_img)
+          if args.save:
+              cv2.imwrite(f"stream_out/raw/img_{count:06d}.png", bayer_img)
+              cv2.imwrite(f"stream_out/debayer/img_{count:06d}.png", color_img)
+          cv2.waitKey(1)
+```
+
+# Setup GAP8 environment
+
+## Flashing modified GAP8 streamer code
 
 Next you need to modify code on the wifi_streaming_example.c before recompiling and flashing to GAP8.
+
+Look at contents of changes section before doing this section.
+
+This in case you use venv to make crazyflie python stuff work in ubuntu 24 (prevents direct pip install).
+source venv/bin/activate
+
+```
+git clone https://github.com/bitcraze/aideck-gap8-examples.git
+cd aideck-gap8-examples
+
+```
+Modify gap8 streamer code.
+
+```
+vi examples/other/wifi-img-streamer.c
+```
+
+Flash and write via cfloader. Same as official tutorial.
+
+Compile
+
+```
+docker run --rm -v ${PWD}:/module bitcraze/aideck tools/build/make-example examples/other/wifi-img-streamer image
+```
+Send over.
+```
+cfloader flash examples/other/wifi-img-streamer/BUILD/GAP8_V2/GCC_RISCV_FREERTOS/target.board.devices.flash.img deck-bcAI:gap8-fw -w radio://0/80/2M/E7E7E7E702
+```
+## Contents of changes to gap8 code
 
 Summary of changes: Change RAW to JPEG, Change memcpy to make it more "dangling free".
 
