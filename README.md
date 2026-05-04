@@ -1,6 +1,6 @@
 # Aideck fixes that Bitcraze engineers should have already done before sale
 
-Collection of stupid aideck fixes to make it work as advertised.
+Collection of aideck fixes to make it work as advertised.
 
 By MinHyuk Park
 
