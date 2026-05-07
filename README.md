@@ -50,6 +50,13 @@ Flash. Change radio address as necessary.
 ```
 cfloader flash build/cf2.bin stm32-fw -w radio://0/80/2M/E7E7E7E702
 ```
+
+# For optimization for color camera, look at code attached to the github
+
+Reduce to QQVGA, change streaming resolution at gap8 code, add delay every frame sending (you can tune 400 value, 400 set as very conservative which limits to around 2.5fps? realistically max frame is 6fps on greyscale on wifi so dont worry too much)
+
+# The following is black and white optimization for greyscale cam
+
 # Change Streamer Script opencv-viewer.py
 
 Disabling color feed as shown can improve stability of feed.
